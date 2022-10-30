@@ -5,17 +5,13 @@
 #include <cstdlib>
 #include <vector>
 
+#include "includes/game/game.h"
 #include "includes/constants/windowConstants.h"
 #include "includes/random/random.h"
 
 using namespace std;
 
-void setDebugText(sf::Text& text, int num, int denum, float proportion) {
-    text.setString("Target = " + to_string(num) + "/" + to_string(denum) + "\nProportion = " + to_string(proportion));
-}
-void setPromptText(sf::Text& text, int num, int denum) {
-    text.setString("Try to guess where " + to_string(num) + "/" + to_string(denum) + " would be on this rectangle");
-}
+
 
 int main()
 {
@@ -31,37 +27,16 @@ int main()
 
     window.setFramerateLimit(framerate);
 
-    // call it once, after creating the window
-    window.setVerticalSyncEnabled(true);
-    //Application runs at the same freq as monitor
-
-    sf::Cursor cursor;
-
     sf::Clock clock;
 
     sf::Font font;
-    font.loadFromFile(fontPath);   
-    sf::Text fpsCounter("0", font);
-    sf::Text textBox("", font);
-    sf::Text debugText("", font);
-    sf::Text promptText("", font);
-    sf::Text answerText("", font);
-    promptText.move(100, 50);
-    answerText.move(100, 100);
-    debugText.move(0,120);
+    font.loadFromFile(fontPath);
 
-    bool entering = false;
-    bool guessing = true;
-    bool debug = false;
-
-    int denum = random(1, 12), num = random(1, denum-1);
+    int denum = random(2, 12), num = random(1, denum-1);
 
     float proportion = float(num)/denum;
 
     float answer;
-
-    setDebugText(debugText, num, denum, proportion);
-    setPromptText(promptText, num, denum);
 
     sf::RectangleShape volume(VOLUME_SIZE);
     volume.setFillColor(SECONDARY_COLOR);
@@ -126,31 +101,6 @@ int main()
                 // key pressed
             case sf::Event::KeyPressed:
                 switch (event.key.code) {
-                    case 36: // ESC
-                        if (entering) {
-                            entering = false;
-                            txt = "";
-                            textBox.setString(txt);
-                        }
-                        break;
-                    case 58: // ENTER
-                        if (debug) {
-                            if (entering) {
-                                entering = false;
-                                // TODO: add enter logic for debug
-                                txt = "";
-                                textBox.setString(txt);
-                            } else {
-                                entering = true;
-                            }
-                        }
-                        break;
-                    case 59: // BACKSPACE
-                        if (entering&&txt.size()>0) {
-                            txt = txt.substr(0, txt.size()-1);
-                            textBox.setString(txt);
-                        }
-                        break;
                     case 87: //F3
                         debug = !debug;
                     default:
